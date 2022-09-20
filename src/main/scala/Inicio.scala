@@ -1,47 +1,16 @@
 
-import org.apache.spark.sql.SparkSession
+import com.typesafe.scalalogging.LazyLogging
+import commons.sparkSession
+import model.Euromillon
 
-object Inicio extends App with sparkSession{
-    println("hello World")
-  val variable1 = 1
-  val variable2 = 2
-    println("hello World")
-  println(variable2)
-  println(variable1)
+object Inicio extends App with sparkSession with LazyLogging {
 
-  val df = spark.read.table("")
-  import spark.implicits._
-  println(s"variable1:$variable1, variable2:$variable2")
+  val lotoDF = spark.read.option("header", value = true).
+    schema(Euromillon.schema).
+    csv("src/main/resources/lotoSample.csv").drop(Euromillon.NSNC)
 
-  df.filter($"col1".gt())
+  //Calcular el numero más repetido por columnas y sacar el numero que más veces se repite
 
-  /**
-   * hola aqui andamos
-   */
-  def hola = {}
+  new MaximoColumna().prueba(lotoDF, logger)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  hola
 }

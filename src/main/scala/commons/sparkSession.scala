@@ -1,3 +1,5 @@
+package commons
+
 import org.apache.spark.sql.SparkSession
 
 trait sparkSession {
@@ -6,4 +8,5 @@ trait sparkSession {
     .master("local[*]")
     .appName("AppLoteria")
     .getOrCreate()
+  spark.sparkContext.setLogLevel("ERROR")
 }
