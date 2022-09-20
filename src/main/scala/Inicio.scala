@@ -1,17 +1,15 @@
-package main.scala
 
 import org.apache.spark.sql.SparkSession
 
-object Inicio extends App{
+object Inicio extends App with sparkSession{
     println("hello World")
   val variable1 = 1
   val variable2 = 2
     println("hello World")
   println(variable2)
   println(variable1)
-val spark = SparkSession.builder()
-  .getOrCreate()
-  val df = spark.read.table()
+
+  val df = spark.read.table("")
   import spark.implicits._
   println(s"variable1:$variable1, variable2:$variable2")
 
@@ -20,7 +18,7 @@ val spark = SparkSession.builder()
   /**
    * hola aqui andamos
    */
-  def hola
+  def hola = {}
 
 
 
