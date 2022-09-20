@@ -11,7 +11,9 @@
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
-        <scala.version>2.13.0</scala.version>
+        <scala.compat.version>2.13</scala.compat.version>
+        <scala.version>${scala.compat.version}.0</scala.version>
+        <spark.version>3.3.0</spark.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
@@ -22,14 +24,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.13</artifactId>
-            <version>3.3.0</version>
+            <artifactId>spark-sql_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.13</artifactId>
-            <version>3.3.0</version>
-        </dependency>
+
 
     </dependencies>
 </project>
