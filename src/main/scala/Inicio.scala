@@ -13,4 +13,6 @@ object Inicio extends App with sparkSession with LazyLogging {
 
   new MaximoColumna().prueba(lotoDF, logger)
 
+  CombinarPares.combinarPares(lotoDF)
+
 }
