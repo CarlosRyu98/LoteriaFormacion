@@ -17,44 +17,40 @@ object Functions {
     val newColumnName = s"${initialPos + 1}_${actualPos + 1}"
     if (actualPos < originalDFSize - 1) {
       addCombinatoryColumn(
-        df = df.withColumn(
-          newColumnName,
-          sort_array(
-            array(
-              df.columns(initialPos),
-              df.columns(actualPos)
-            )
-          )
-        ),
+        calcularCombinacion(df, actualPos, initialPos, newColumnName),
         originalDFSize,
         actualPos = actualPos + 1,
         initialPos = initialPos
       )
     } else if (initialPos < originalDFSize - 2) {
       addCombinatoryColumn(
-        df = df.withColumn(
-          newColumnName,
-          sort_array(
-            array(
-              df.columns(initialPos),
-              df.columns(actualPos)
-            )
-          )
-        ),
+        calcularCombinacion(df, actualPos, initialPos, newColumnName),
         originalDFSize,
         actualPos = initialPos + 2,
         initialPos = initialPos + 1
       )
-    } else df.withColumn(newColumnName, sort_array(array(df.columns(initialPos), df.columns(actualPos))))
+    } else calcularCombinacion(df, actualPos, initialPos, newColumnName)
   }
 
+
+  private def calcularCombinacion(df: DataFrame, actualPos: Int, initialPos: Int, newColumnName: String) = {
+    df.withColumn(
+      newColumnName,
+      sort_array(
+        array(
+          df.columns(initialPos),
+          df.columns(actualPos)
+        )
+      )
+    )
+  }
 
   def contarCombinaciones(combinadoDF: DataFrame): DataFrame = {
     val auxDF = combinadoDF
       .drop(Euromillon.NUM5, Euromillon.NUM4, Euromillon.NUM3, Euromillon.NUM2, Euromillon.NUM1)
 
     auxDF
-      .withColumn("combinacionesTotales", explode(array(auxDF.columns.map(x => auxDF(x)): _*)))
+      .withColumn("combinacionesTotales", explode(array(auxDF.columns.map( auxDF(_)): _*)))
       .groupBy("combinacionesTotales")
       .count()
       .orderBy(desc("count"))
