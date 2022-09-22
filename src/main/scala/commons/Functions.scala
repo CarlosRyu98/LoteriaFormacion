@@ -58,12 +58,44 @@ object Functions {
     arrayColum
   }
 
+  def calculateThreeColumns2(df: DataFrame, originalDFSize: Int, initialPos: Int = 0): Array[Column] = {
 
-  private def calcularCombinacion(actualPos: String, initialPos: String, newColumnName: String) = {
+    var arrayColum: Array[Column] = Array()
+    //llamar al metodo calculateCombinationColumns y guardar sus datos
+    //crear condiciones para añadir nuestro numero delante de las columnas necesarias.
+    //Modificar calcularCombinacion para que ahcepte un numero determinado de parametros
+    //llamar a calcularCombinacion
+
+    val arrayPares = calculateCombinationColumns(df, df.columns.length,initialPos+2, initialPos+1)
+
+    for (num <- initialPos until originalDFSize - 2) {
+
+
+
+
+
+      var col1: String = df.columns(num)
+      var col2: String = df.columns(num+1)
+      var initialMethod = num + 1
+      var actualMethod = num + 2
+
+      var newColumnName = s"${num}_${initialMethod}_${actualMethod}"
+      arrayColum = arrayColum :+ calcularCombinacion(col1,col2, newColumnName)
+
+
+    }
+    arrayColum
+  }
+
+  // Quitar el parametro newColumnName
+  // Hacer que el parametro position sea de tipo "multyple"
+  // Generar nombre de columna
+  // Desempaquetar el parametro position introduciendolo en el array
+  private def calcularCombinacion(positions: String*) = {
+    val newColumnName = positions.reduce(_+"_"+_)
     sort_array(
       array(
-        initialPos,
-        actualPos
+        positions.map(col)
       )
     ).as(newColumnName)
   }
