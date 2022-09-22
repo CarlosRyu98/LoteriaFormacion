@@ -23,6 +23,7 @@ object Inicio extends App with sparkSession with LazyLogging {
     Euromillon.NUM5
   )
 
+
   //Calcular los pares posibles de cada row
   //  Planificamos las columnas resultantes de combinar las originales
   val columnsArray = Functions.calculateCombinationColumns(
@@ -38,11 +39,9 @@ object Inicio extends App with sparkSession with LazyLogging {
   val combinatedDF = lotoDF.select(lotoDF("*") +: columnsArray: _*)
   combinatedDF.show()
 
-
   val trios = Functions.calculateThreeColumns(columns)
   val allTrios= lotoDF.select(trios:_*)
   allTrios.show()
   val triosCombinados = Functions.contarCombinaciones(allTrios)
   triosCombinados.show()
-
 }

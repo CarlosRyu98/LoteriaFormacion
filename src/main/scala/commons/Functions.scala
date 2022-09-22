@@ -24,7 +24,7 @@ object Functions {
         columns,
         actualPos + 1,
         initialPos
-      ) :+ calcularCombinacion(col2, col1, newColumnName)
+      ) :+ calcularCombinacion(col2, col1)
 
     } else if (initialPos < numColumns - 2) {
 
@@ -32,11 +32,10 @@ object Functions {
         columns,
         initialPos + 2,
         initialPos + 1
-      ) :+ calcularCombinacion(col2, col1, newColumnName)
+      ) :+ calcularCombinacion(col2, col1)
 
-    } else Array(calcularCombinacion(col2, col1, newColumnName))
+    } else Array(calcularCombinacion(col2, col1))
   }
-
 
   def calculateThreeColumns(columns: Array[String], initialPos: Int = 0): Array[Column] = {
 
@@ -66,21 +65,17 @@ object Functions {
     //Modificar calcularCombinacion para que ahcepte un numero determinado de parametros
     //llamar a calcularCombinacion
 
-    val arrayPares = calculateCombinationColumns(df, df.columns.length,initialPos+2, initialPos+1)
+    val arrayPares = calculateCombinationColumns(df, df.columns.length, initialPos + 2,initialPos + 1)
 
     for (num <- initialPos until originalDFSize - 2) {
 
 
-
-
-
       var col1: String = df.columns(num)
-      var col2: String = df.columns(num+1)
+      var col2: String = df.columns(num + 1)
       var initialMethod = num + 1
       var actualMethod = num + 2
 
-      var newColumnName = s"${num}_${initialMethod}_${actualMethod}"
-      arrayColum = arrayColum :+ calcularCombinacion(col1,col2, newColumnName)
+      arrayColum = arrayColum :+ calcularCombinacion(col1, col2)
 
 
     }
@@ -91,11 +86,12 @@ object Functions {
   // Hacer que el parametro position sea de tipo "multyple"
   // Generar nombre de columna
   // Desempaquetar el parametro position introduciendolo en el array
+  // DONE
   private def calcularCombinacion(positions: String*) = {
-    val newColumnName = positions.reduce(_+"_"+_)
+    val newColumnName = positions.reduce(_ + "_" + _)
     sort_array(
       array(
-        positions.map(col)
+        positions.map(col): _*
       )
     ).as(newColumnName)
   }
