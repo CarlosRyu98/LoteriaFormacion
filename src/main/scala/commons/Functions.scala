@@ -12,25 +12,24 @@ object Functions {
     columns.reduce(_ union _).groupBy("num").sum("count").sort(desc("sum(count)"))
   }
 
-  def calculateCombinationColumns(df: DataFrame, originalDFSize: Int, actualPos: Int, initialPos: Int = 0): Array[Column] = {
+  def calculateCombinationColumns(columns: Array[String], actualPos: Int, initialPos: Int = 0): Array[Column] = {
     val newColumnName = s"${initialPos + 1}_${actualPos + 1}"
-    val col1: String = df.columns(initialPos)
-    val col2: String = df.columns(actualPos)
+    val col1: String = columns(initialPos)
+    val col2: String = columns(actualPos)
+    val numColumns = columns.length
 
-    if (actualPos < originalDFSize - 1) {
+    if (actualPos < numColumns - 1) {
 
       calculateCombinationColumns(
-        df,
-        originalDFSize,
+        columns,
         actualPos + 1,
         initialPos
       ) :+ calcularCombinacion(col2, col1, newColumnName)
 
-    } else if (initialPos < originalDFSize - 2) {
+    } else if (initialPos < numColumns - 2) {
 
       calculateCombinationColumns(
-        df,
-        originalDFSize,
+        columns,
         initialPos + 2,
         initialPos + 1
       ) :+ calcularCombinacion(col2, col1, newColumnName)
