@@ -23,7 +23,6 @@ object Inicio extends App with sparkSession with LazyLogging {
     Euromillon.NUM5
   )
 
-
   //Calcular los pares posibles de cada row
   //  Planificamos las columnas resultantes de combinar las originales
   val columnsArray = Functions.calculateCombinationColumns(

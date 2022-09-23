@@ -45,12 +45,13 @@ object Functions {
       // Cambio de mid
       for (auxMid <- auxInicial + 1 until columns.length - 1) {
         // Cambio de Actual
+
         for (auxActual <- auxMid + 1 until columns.length) {
           var newColumnName = s"${auxInicial}_${auxMid}_${auxActual}"
           var col1: String = columns(auxInicial)
           var col2: String = columns(auxMid)
           var col3: String = columns(auxActual)
-          arrayColum = arrayColum :+ calcularCombinaciontrio(col1, col2, col3, newColumnName)
+          arrayColum = arrayColum :+ calcularCombinacion(col1, col2, col3)
         }
       }
     }
@@ -96,15 +97,6 @@ object Functions {
     ).as(newColumnName)
   }
 
-  private def calcularCombinaciontrio(initialPos: String, midPos: String, actualPos: String, newColumnName: String) = {
-    sort_array(
-      array(
-        initialPos,
-        midPos,
-        actualPos
-      )
-    ).as(newColumnName)
-  }
 
   def contarCombinaciones(combinadoDF: DataFrame): DataFrame = {
     combinadoDF
