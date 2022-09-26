@@ -1,5 +1,6 @@
 package commons
 
+
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Column, DataFrame}
 
@@ -58,7 +59,8 @@ object Functions {
     arrayColum
   }
 
-  def calculateThreeColumns2(df: DataFrame, originalDFSize: Int, initialPos: Int = 0): Array[Column] = {
+  //todo este es el que estamos usando
+  def calculateThreeColumns2(columns: Array[String], initialPos: Int = 0): Array[Column] = {
 
     var arrayColum: Array[Column] = Array()
     //llamar al metodo calculateCombinationColumns y guardar sus datos
@@ -66,43 +68,52 @@ object Functions {
     //Modificar calcularCombinacion para que ahcepte un numero determinado de parametros
     //llamar a calcularCombinacion
 
-    val arrayPares = calculateCombinationColumns(df, df.columns.length, initialPos + 2,initialPos + 1)
+    val arrayPares = calculateCombinationColumns(columns: Array[String], initialPos + 2,initialPos + 1)
 
-    for (num <- initialPos until originalDFSize - 2) {
+    println(arrayPares.length)
+    for (num <- initialPos until arrayPares.length) {
+      println("Entro en for" + num)
 
+      if (num == 0) {
+        println("entro en if")
+        println(s"datos substraidos ${arrayPares(num)}")
+        arrayPares(num)
+      }
 
-      var col1: String = df.columns(num)
-      var col2: String = df.columns(num + 1)
-      var initialMethod = num + 1
-      var actualMethod = num + 2
+      // Me gustaria acceder a cada columna en funcion de su nombre.
+      /*if(arrayPares.NAME == "2")
+        {
 
-      arrayColum = arrayColum :+ calcularCombinacion(col1, col2)
+          concatenar las columnas
 
-
+        }*/
     }
-    arrayColum
-  }
+      arrayPares
+    }
 
-  // Quitar el parametro newColumnName
-  // Hacer que el parametro position sea de tipo "multyple"
-  // Generar nombre de columna
-  // Desempaquetar el parametro position introduciendolo en el array
-  // DONE
-  private def calcularCombinacion(positions: String*) = {
-    val newColumnName = positions.reduce(_ + "_" + _)
-    sort_array(
-      array(
-        positions.map(col): _*
-      )
-    ).as(newColumnName)
-  }
+    //
 
 
-  def contarCombinaciones(combinadoDF: DataFrame): DataFrame = {
-    combinadoDF
-      .withColumn("combinacionesTotales", explode(array(combinadoDF.columns.map(combinadoDF(_)): _*)))
-      .groupBy("combinacionesTotales")
-      .count()
-      .orderBy(desc("count"))
+    // Quitar el parametro newColumnName
+    // Hacer que el parametro position sea de tipo "multyple"
+    // Generar nombre de columna
+    // Desempaquetar el parametro position introduciendolo en el array
+    // DONE
+    def calcularCombinacion(positions: String*) = {
+      val newColumnName = positions.reduce(_ + "_" + _)
+      sort_array(
+        array(
+          positions.map(col): _*
+        )
+      ).as(newColumnName)
+    }
+
+
+    def contarCombinaciones(combinadoDF: DataFrame): DataFrame = {
+      combinadoDF
+        .withColumn("combinacionesTotales", explode(array(combinadoDF.columns.map(combinadoDF(_)): _*)))
+        .groupBy("combinacionesTotales")
+        .count()
+        .orderBy(desc("count"))
+    }
   }
-}
