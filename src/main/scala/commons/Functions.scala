@@ -81,7 +81,7 @@ object Functions {
       }
 
       // Me gustaria acceder a cada columna en funcion de su nombre.
-      /*if(arrayPares.NAME == "2")
+      /*if(arrayPares.NAME.contents == "2")
         {
 
           concatenar las columnas
