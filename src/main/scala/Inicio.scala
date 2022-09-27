@@ -1,7 +1,7 @@
 
 import com.typesafe.scalalogging.LazyLogging
 import commons.{Functions, sparkSession}
-import model.Euromillon
+import model.{CombinarPares, CombinarTrios, Euromillon}
 
 object Inicio extends App with sparkSession with LazyLogging {
 
@@ -26,7 +26,7 @@ object Inicio extends App with sparkSession with LazyLogging {
 
   //Calcular los pares posibles de cada row
   //  Planificamos las columnas resultantes de combinar las originales
-  val columnsArray = Functions.calculateCombinationColumns(
+  val columnsArray = CombinarPares.calculateCombinationColumns(
     columns, actualPos = 1)
   //  Obtenemos el df con los pares
   val paresDF = lotoDF.select(columnsArray: _*)
@@ -39,17 +39,19 @@ object Inicio extends App with sparkSession with LazyLogging {
   /*val combinatedDF = lotoDF.select(lotoDF("*") +: columnsArray: _*)
   combinatedDF.show()
 
-  val trios = Functions.calculateThreeColumns(columns)
-  val allTrios= lotoDF.select(trios:_*)*/
+  val trios = CombinarTrios.calculateThreeColumns(columns)
+  val allTrios = lotoDF.select(trios: _*)
+  allTrios.show(10)*/
 
 
-val clacularTrios2 = Functions.calculateThreeColumns2(columns)
-  val allTrios2= lotoDF.select(clacularTrios2:_*)
-  allTrios2.show()
+  val clacularTrios2 = Functions.calculateThreeColumns2(columns)
+    val allTrios2= lotoDF.select(clacularTrios2:_*)
+    allTrios2.show()
 
-  /*allTrios.show()
-  val triosCombinados = Functions.contarCombinaciones(allTrios)
-  triosCombinados.show()*/
+  val triosCombinados = Functions.contarCombinaciones(allTrios2)
+  triosCombinados.show()
+
+
 
 
 }
