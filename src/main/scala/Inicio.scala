@@ -1,7 +1,8 @@
 
 import com.typesafe.scalalogging.LazyLogging
 import commons.{Functions, sparkSession}
-import model.{CombinarPares, CombinarTrios, Euromillon}
+import model.{Euromillon, Parejas, Trios, Cuartetos}
+import org.apache.spark.sql.Column
 
 object Inicio extends App with sparkSession with LazyLogging {
 
@@ -9,11 +10,8 @@ object Inicio extends App with sparkSession with LazyLogging {
     schema(Euromillon.schema).
     csv("src/main/resources/lotoSample.csv").drop(Euromillon.NSNC)
 
-  //Calcular el numero más repetido por columnas y sacar el numero que más veces se repite
-
+  // Calcular el numero más repetido por columnas y sacar el numero que más veces se repite
   new MaximoColumna().prueba(lotoDF, logger)
-
-  CombinarPares.combinarPares(lotoDF)
 
   val columns = Array(
     Euromillon.NUM1,
@@ -23,35 +21,37 @@ object Inicio extends App with sparkSession with LazyLogging {
     Euromillon.NUM5
   )
 
-
-  //Calcular los pares posibles de cada row
-  //  Planificamos las columnas resultantes de combinar las originales
-  val columnsArray = CombinarPares.calculateCombinationColumns(
-    columns, actualPos = 1)
-  //  Obtenemos el df con los pares
-  val paresDF = lotoDF.select(columnsArray: _*)
-  //  Agrupamos por pares y contamos # apariciones
-  val numOfCombinationsAppearances = Functions.contarCombinaciones(paresDF)
-  numOfCombinationsAppearances.show()
-
   //Para obtener las combinaciones relacionadas con las columnas originales realizamos
   // un select uniendo los nombre originales al array de columnas combinadas
-  /*val combinatedDF = lotoDF.select(lotoDF("*") +: columnsArray: _*)
-  combinatedDF.show()
+  val columnsCol = Functions.funcComb(columns: _*)
+  val combinatedDF = lotoDF.select(lotoDF("*") +: columnsCol: _*)
+  combinatedDF.show(10, truncate = false)
 
-  val trios = CombinarTrios.calculateThreeColumns(columns)
-  val allTrios = lotoDF.select(trios: _*)
-  allTrios.show(10)*/
+  // Funciones para obtener parejas
+  val pares = Parejas.calculateTwoColumns(columns)
+  val paresComb = Functions.funcComb(pares: _*)
+  val allPares = lotoDF.select(paresComb: _*)
+  allPares.show(10, truncate = false)
 
+  // Función que le metes un array de individuales y otro de parejas y te devuelve un array de tríos
+  val trios = Trios.calculateThreeColumns(columns, pares)
+  val triosCol = Functions.funcComb(trios: _*)
+  val allTrios = lotoDF.select(triosCol: _*)
+  allTrios.show(10, truncate = false)
 
-  val clacularTrios2 = Functions.calculateThreeColumns2(columns)
-    val allTrios2= lotoDF.select(clacularTrios2:_*)
-    allTrios2.show()
+  // Función que le metes un array de individuales y otro de trios y te devuelve un array de cuartetos
+  val cuartetos = Cuartetos.calculateFourColumns(columns, trios)
+  val cuartetosCol = Functions.funcComb(cuartetos: _*)
+  val allCuartetos = lotoDF.select(cuartetosCol: _*)
+  allCuartetos.show(10, truncate = false)
 
-  val triosCombinados = Functions.contarCombinaciones(allTrios2)
-  triosCombinados.show()
+  // Mostrar todas las combinaciones
+  val allCol: Seq[Column] = paresComb ++ triosCol ++ cuartetosCol
+  val allTogether = lotoDF.select(lotoDF("*") +: allCol: _*)
+  allTogether.show(10, truncate = false)
 
-
-
+  // Agrupamos por pares y contamos # apariciones
+  val numOfCombinationsAppearances = Functions.contarCombinaciones(allPares)
+  numOfCombinationsAppearances.show(10, truncate = false)
 
 }
